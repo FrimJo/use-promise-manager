@@ -1,0 +1,8 @@
+{
+  "short_name": "use-promise-manager",
+  "name": "use-promise-manager",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
