@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/use-promise-manager/static/css/main.2c6a48fe.chunk.css",
+    "main.js": "/use-promise-manager/static/js/main.4629473e.chunk.js",
+    "main.js.map": "/use-promise-manager/static/js/main.4629473e.chunk.js.map",
+    "runtime-main.js": "/use-promise-manager/static/js/runtime-main.18d25bb8.js",
+    "runtime-main.js.map": "/use-promise-manager/static/js/runtime-main.18d25bb8.js.map",
+    "static/js/2.8df25f9f.chunk.js": "/use-promise-manager/static/js/2.8df25f9f.chunk.js",
+    "static/js/2.8df25f9f.chunk.js.map": "/use-promise-manager/static/js/2.8df25f9f.chunk.js.map",
+    "index.html": "/use-promise-manager/index.html",
+    "precache-manifest.2c6516f3d5baddf53c2a41c69475551f.js": "/use-promise-manager/precache-manifest.2c6516f3d5baddf53c2a41c69475551f.js",
+    "service-worker.js": "/use-promise-manager/service-worker.js",
+    "static/css/main.2c6a48fe.chunk.css.map": "/use-promise-manager/static/css/main.2c6a48fe.chunk.css.map",
+    "static/js/2.8df25f9f.chunk.js.LICENSE": "/use-promise-manager/static/js/2.8df25f9f.chunk.js.LICENSE",
+    "static/js/main.4629473e.chunk.js.LICENSE": "/use-promise-manager/static/js/main.4629473e.chunk.js.LICENSE"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.18d25bb8.js",
+    "static/js/2.8df25f9f.chunk.js",
+    "static/css/main.2c6a48fe.chunk.css",
+    "static/js/main.4629473e.chunk.js"
+  ]
+}
