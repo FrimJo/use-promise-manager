@@ -21,10 +21,7 @@
     "predeploy": "cd example && yarn install && yarn run build",
     "deploy": "gh-pages -d example/build"
   },
-  "dependencies": {
-    "@xstate/react": "^0.8.1",
-    "xstate": "^4.7.6"
-  },
+  "dependencies": {},
   "peerDependencies": {
     "react": "^16.9.0"
   },

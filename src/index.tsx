@@ -1,106 +1,76 @@
 import * as React from "react";
-import { useMachine } from "@xstate/react";
-import { Machine, StateSchema, assign } from "xstate";
 
-interface IContext {
+interface IState {
   error: any[];
   count: number;
 }
 
-interface IStateSchema extends StateSchema<IContext> {
-  states: {
-    idle: {};
-    pending: {};
-  };
-}
-
-type Event =
+type Actions =
   | { type: "INIT" }
   | { type: "RESOLVE" }
-  | { type: "REJECT"; error: IContext["error"][number] };
-
-const ManagePromiseMachine = Machine<IContext, IStateSchema, Event>({
-  id: "managePromise",
-  initial: "idle",
-  context: {
-    error: [],
-    count: 0
-  },
-  states: {
-    idle: {
-      on: {
-        INIT: {
-          target: "pending",
-          actions: assign({
-            error: (_context, _event) => [],
-            count: (_context, _event) => 1
-          })
-        }
-      }
-    },
-    pending: {
-      on: {
-        "": {
-          cond: (context, _event) => context.count === 0,
-          target: "idle"
-        },
-        INIT: {
-          actions: assign({
-            count: (context, _event) => context.count + 1
-          })
-        },
-        RESOLVE: {
-          actions: assign({
-            count: (context, _event) => context.count - 1
-          })
-        },
-        REJECT: {
-          actions: assign({
-            error: (context, event) => context.error.concat(event.error),
-            count: (context, _event) => context.count - 1
-          })
-        }
-      }
-    }
-  }
-});
+  | { type: "REJECT"; error: IState["error"][number] };
 
 type PromiseState = Readonly<{
   hasError: boolean;
   isResolving: boolean;
-  error: IContext["error"];
+  error: IState["error"];
 }>;
 
 type ManagePromiseFunction = <T>(promise: Promise<T>) => Promise<T>;
 
-export const usePromiseManager = (): [PromiseState, ManagePromiseFunction] => {
-  const [current, send] = useMachine(ManagePromiseMachine);
-  const { error } = current.context;
+const promiseManagerReducer: React.Reducer<IState, Actions> = (
+  prervState,
+  action
+) => {
+  switch (action.type) {
+    case "INIT": {
+      const count = prervState.count === 0 ? 1 : prervState.count + 1;
+      const error = prervState.count === 0 ? [] : prervState.error;
+      return { ...prervState, count, error };
+    }
+    case "REJECT": {
+      const count = prervState.count - 1;
+      const error = [...prervState.error, action.error];
+      return { ...prervState, count, error };
+    }
+    case "RESOLVE": {
+      const count = prervState.count - 1;
+      return { ...prervState, count };
+    }
+  }
+};
 
-  const state = React.useMemo(
-    () => ({
-      hasError: error.length > 0,
-      isResolving: current.matches("pending"),
-      error
-    }),
-    [error, current]
-  );
+export const usePromiseManager = (): [PromiseState, ManagePromiseFunction] => {
+  const [state, dispatch] = React.useReducer(promiseManagerReducer, {
+    error: [],
+    count: 0
+  });
 
   const manage: ManagePromiseFunction = React.useCallback(
     async promise => {
-      send({ type: "INIT" });
+      dispatch({ type: "INIT" });
       return promise
         .then(result => {
-          send({ type: "RESOLVE" });
+          dispatch({ type: "RESOLVE" });
           return result;
         })
         .catch(error => {
-          send({ type: "REJECT", error });
+          dispatch({ type: "REJECT", error });
           return error;
         });
     },
-    [send]
+    [dispatch]
   );
 
-  return [state, manage];
+  return [
+    React.useMemo(
+      () => ({
+        hasError: state.error.length > 0,
+        isResolving: state.count > 0,
+        error: state.error
+      }),
+      [state]
+    ),
+    manage
+  ];
 };
